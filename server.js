@@ -26,21 +26,23 @@ app.get("/greetings/:person", (req, res) => {
 });
 
 app.get("/roll/:number", (req, res) => {
-  if (isNaN(req.params.number)) {
-    res.send("You must specify a number.");
-  } else {
-    res.send(`You rolled a ${req.params.number}.`);
+  const num = parseInt(req.params.number);
+  if (isNaN(num)) {
+    return res.send("You must specify a number.");
   }
+
+  const roll = Math.floor(Math.random() * (num + 1));
+  res.send(`You rolled a ${roll}.`);
 });
 
-app.get("/collectibles/:thing", (req, res) => {
-  const item = collectibles[req.params.thing];
-  if (item) {
-    res.send(
-      `So, you want the ${item.name}? For ${item.price}, it can be yours!`
-    );
-  }
-  res.send("This item is not yet in stock. Check back soon!");
+app.get("/collectibles/:index", (req, res) => {
+  const item = collectibles[req.params.index];
+
+  if (!item) return res.send("This item is not yet in stock. Check back soon!");
+
+  res.send(
+    `So, you want the ${item.name}? For $${item.price}, it can be yours!`
+  );
 });
 
 app.get("/shoes", (req, res) => {
